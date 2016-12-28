@@ -1,0 +1,5 @@
+{
+  "token": "Your token here",
+  "cmd_prefix": "!",
+  "channels": ["chat", "bots"]
+}
