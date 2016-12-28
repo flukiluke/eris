@@ -12,6 +12,4 @@ class Bot(object):
 
     @asyncio.coroutine
     def game(self, *args):
-        print("Doing command")
-        print(args[0])
         yield from self.client.change_presence(game = discord.Game(name = args[0]))
