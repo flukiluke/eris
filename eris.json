@@ -1,5 +1,12 @@
 {
   "token": "Your token here",
+  "channels": ["chat", "bots"],
   "cmd_prefix": "!",
-  "channels": ["chat", "bots"]
+  "game_prefix": ">",
+  "games": {
+    "zork": {
+      "frotz": "frotz",
+      "datafile": "ZORK1.DAT"
+    }
+  }
 }

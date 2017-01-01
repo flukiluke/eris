@@ -23,10 +23,8 @@ def on_message(message):
         return
     if message.content.startswith(config['cmd_prefix']):
         tokens = shlex.split(message.content[1:])
-        yield from bot.do_command(*tokens)
-
-    if message.content.lower() == 'so' or ':so:' in message.content.lower():
-        yield from client.send_message(message.channel, 'so')
+        yield from bot.do_command(message, *tokens)
+    yield from bot.parse_chatter(message)
 
 def interesting_message(message):
     if config['channels'] and message.channel.name not in config['channels']: 

@@ -1,6 +1,10 @@
 Eris - 2016
 
-Dependencies: Install discord.py from https://github.com/Rapptz/discord.py
+Dependencies:
+ - Install discord.py from https://github.com/Rapptz/discord.py
+ - Install pexpect from pip if you don't already have it
+ - Compile frotz (http://frotz.sourceforge.net/) in dumb mode and get ZORK1.DAT
+   from http://www.infocom-if.org/downloads/downloads.html
 
 This is a small and useless bot for use on Discord. Before running it for the
 first time, you will need to create an application with a bot user at
@@ -18,11 +22,18 @@ are listed below:
   set to a single character such as . or !
 - token (string): The unique token corresponding to your application's bot user.
   You will need to supply this yourself.
+- game_prefix (string): All text to be send to the currently playing game should
+  be prefixed with this.
+- games->zork->frotz (string): The path to the frotz binary for running zork.
+- games->zork->datafile (string): The path to the ZORK1.DAT file.
 
 
 The syntax of the commands themselves is quite simple. Either single or double
 quotes are required around parameters that contain spaces. Commands list follows:
 
-- game <name>: Show the bot as playing <name> in the status pane.
+- game start zork: start a game of Zork.
+- game end: End a game of Zork.
+- game input <text>: Send <text> to the game being played. Can use the game_prefix
+  instead as a shortcut.
 
 There are also some fun extras hidden in there for people who like to read the code.
