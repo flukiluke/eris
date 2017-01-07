@@ -10,7 +10,10 @@ class Bot(object):
 
     @asyncio.coroutine
     def do_command(self, message, command, *args):
-        yield from getattr(self, command)(message, *args)
+        try:
+            yield from getattr(self, command)(message, *args)
+        except AttributeError:
+            pass
 
     @asyncio.coroutine
     def game(self, message, command, *args):
@@ -37,7 +40,7 @@ class Bot(object):
             return
         self.game_obj.stop()
         self.game_obj = None
-        yield from self.client.change_presence(game = discord.Game(name = ''))
+        yield from self.client.change_presence(game = None)
 
     @asyncio.coroutine
     def parse_chatter(self, message):
