@@ -8,10 +8,13 @@ class Bot(object):
         self.client = client
         self.config = config
         self.game_obj = None
-        self.polls = None
+        self.polls = {}
+        self.groups = ['game', 'poll']
 
     @asyncio.coroutine
     def do_command(self, message, command, *args):
+        if command not in self.groups:
+            return
         try:
             yield from getattr(self, command)(message, *args)
         except AttributeError:
@@ -49,29 +52,40 @@ class Bot(object):
         yield from getattr(self, 'poll_' + command)(message, *args)
 
     @asyncio.coroutine
-    def poll_create(self, message, name, question, options):
-        if self.polls[name] is not None:
+    def poll_create(self, message, name, question, *options):
+        if name in self.polls:
+            yield from self.client.send_message(message.channel, "Poll " + name + " already exists")
             return
         self.polls[name] = poll.Poll(name, question, options)
+        yield from self.client.send_message(message.channel, "Created poll " + name)
 
     @asyncio.coroutine
     def poll_vote(self, message, name, option):
-        if self.polls[name] is None:
+        if name not in self.polls:
+            yield from self.client.send_message(message.channel, "Poll " + name + "not found")
             return
         self.polls[name].vote(message.author.id, option)
+        yield from self.client.send_message(message.channel, "Thank you for voting")
 
     @asyncio.coroutine
     def poll_results(self, message, name):
-        if self.polls[name] is None:
+        if name not in self.polls:
+            yield from self.client.send_message(message.channel, "Poll " + name + " not found")
             return
-        self.polls[name].vote(message.author, option)
+        results = self.polls[name].results()
+        result_message = "Results for poll " + name + "\n"
+        for key in results:
+            result_message += "- **" + key + "**: " + str(results[key]) + "\n"
+        yield from self.client.send_message(message.channel, result_message)
 
     @asyncio.coroutine
     def poll_list(self, message):
         if self.polls is None:
             return
-        for poll in polls:
-            // create message
+        result_message = "Poll list:"
+        for poll in self.polls.values():
+            result_message += "\n" + poll.name + ": " + poll.question + " Answer " + poll.options_string()
+        yield from self.client.send_message(message.channel, result_message)
 
     @asyncio.coroutine
     def parse_chatter(self, message):

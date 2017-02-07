@@ -36,4 +36,13 @@ quotes are required around parameters that contain spaces. Commands list follows
 - game input <text>: Send <text> to the game being played. Can use the game_prefix
   instead as a shortcut.
 
+(Polling is still in development)
+- poll create <pollname> <question> <answer1> <answer2> ...: Create a poll with a
+  short name as an identifier, a question to be answered, and as many answers as
+  you like.
+- poll vote <pollname> <answer>: Set your response to a poll. Re-voting changes
+  your vote.
+- poll results <pollname>: Show results from a poll.
+- poll list: Show all polls with their question and answers.
+
 There are also some fun extras hidden in there for people who like to read the code.
