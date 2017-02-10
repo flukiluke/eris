@@ -44,5 +44,6 @@ quotes are required around parameters that contain spaces. Commands list follows
   your vote.
 - poll results <pollname>: Show results from a poll.
 - poll list: Show all polls with their question and answers.
+- poll delete <pollname>: Delete a poll forever.
 
 There are also some fun extras hidden in there for people who like to read the code.

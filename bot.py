@@ -60,11 +60,23 @@ class Bot(object):
         yield from self.client.send_message(message.channel, "Created poll " + name)
 
     @asyncio.coroutine
+    def poll_delete(self, message, name):
+        if name not in self.polls:
+            yield from self.client.send_message(message.channel, "Poll " + name + "not found")
+
+        del self.polls[name]
+        yield from self.client.send_message(message.channel, "Poll " + name + " deleted")
+
+    @asyncio.coroutine
     def poll_vote(self, message, name, option):
         if name not in self.polls:
             yield from self.client.send_message(message.channel, "Poll " + name + "not found")
             return
-        self.polls[name].vote(message.author.id, option)
+        try:
+            self.polls[name].vote(message.author, option)
+        except LookupError as e:
+            yield from self.client.send_message(message.channel, "That's not an option. *This* is an option (list): " + self.polls[name].options_string())
+            return
         yield from self.client.send_message(message.channel, "Thank you for voting")
 
     @asyncio.coroutine
@@ -74,8 +86,12 @@ class Bot(object):
             return
         results = self.polls[name].results()
         result_message = "Results for poll " + name + "\n"
-        for key in results:
-            result_message += "- **" + key + "**: " + str(results[key]) + "\n"
+        for option, voters in results.items():
+            result_message += "- **" + option + "**: "
+            if voters is None:
+                result_message += "No votes\n"
+            else:
+                result_message += str(len(voters)) + " votes (" + ", ".join([voter.display_name for voter in voters]) + ")\n"
         yield from self.client.send_message(message.channel, result_message)
 
     @asyncio.coroutine
