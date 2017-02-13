@@ -88,8 +88,10 @@ class Bot(object):
         result_message = "Results for poll " + name + "\n"
         for option, voters in results.items():
             result_message += "- **" + option + "**: "
-            if voters is None:
+            if len(voters) == 0:
                 result_message += "No votes\n"
+            elif len(voters) == 1:
+                result_message += "1 vote (" + voters[0].display_name + ")\n"
             else:
                 result_message += str(len(voters)) + " votes (" + ", ".join([voter.display_name for voter in voters]) + ")\n"
         yield from self.client.send_message(message.channel, result_message)

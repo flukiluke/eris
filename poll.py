@@ -3,15 +3,17 @@ class Poll:
         self.name = name
         self.question = question
         self.options = options
-        self.votes = dict.fromkeys(options)
+        self.votes = {}
+        for option in options:
+            self.votes[option] = []
 
     def vote(self, user, option):
         if option not in self.options:
             raise LookupError
-        if self.votes[option] is None:
-            self.votes[option] = [user]
-        else:
-            self.votes[option].append(user)
+        for voters in self.votes.values():
+            if user in voters:
+                voters.remove(user)
+        self.votes[option].append(user)
 
     def results(self):
         return self.votes
