@@ -1,6 +1,7 @@
 {
   "token": "Your token here",
-  "channels": ["chat", "bots"],
+  "channels": ["general"],
+  "main_channel": "<insert main channel id>",
   "cmd_prefix": "!",
   "game_prefix": ">",
   "games": {
@@ -8,5 +9,6 @@
       "frotz": "frotz",
       "datafile": "ZORK1.DAT"
     }
-  }
+  },
+  "WA_appid": "<Wolfram Alpha API key>"
 }

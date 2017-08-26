@@ -36,7 +36,6 @@ quotes are required around parameters that contain spaces. Commands list follows
 - game input <text>: Send <text> to the game being played. Can use the game_prefix
   instead as a shortcut.
 
-(Polling is still in development)
 - poll create <pollname> <question> <answer1> <answer2> ...: Create a poll with a
   short name as an identifier, a question to be answered, and as many answers as
   you like.
@@ -45,5 +44,12 @@ quotes are required around parameters that contain spaces. Commands list follows
 - poll results <pollname>: Show results from a poll.
 - poll list: Show all polls with their question and answers.
 - poll delete <pollname>: Delete a poll forever.
+
+- wa <text>: Make Wolfram Alpha query with brief results
+- waa <text>: Make Wolfram Alpha query with extended results
+
+- clear <n>: Delete the n most recent messages in the channel
+
+- tex <maths>: Render maths as LaTeX code (assumed to be between $$)
 
 There are also some fun extras hidden in there for people who like to read the code.
