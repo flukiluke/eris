@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import string
 import random
 import wolframalpha

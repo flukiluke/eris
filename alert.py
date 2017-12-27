@@ -2,7 +2,7 @@ import asyncio
 import datetime
 import discord
 
-alerts = []
+alerts = [("@everyone REMINDER: 2nd year enrolment opens in 1 hour.", datetime.datetime(2017, 7, 4, 9, 00))]
 
 @asyncio.coroutine
 def task(client, config):

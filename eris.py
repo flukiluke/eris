@@ -29,13 +29,12 @@ def on_message(message):
     yield from bot.parse_chatter(message)
 
 def interesting_message(message):
-    if config['channels'] and message.channel.name not in config['channels']:
-        return False
     if message.author == client.user:
         return False
     return True
 
 client.loop.create_task(bot.fortune_task())
 client.loop.create_task(bot.weather_task())
+client.loop.create_task(bot.store_weather_task())
 client.loop.create_task(bot.alert_task())
 client.run(config['token'])

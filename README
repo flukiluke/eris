@@ -2,9 +2,7 @@ Eris - 2016
 
 Dependencies:
  - Install discord.py from https://github.com/Rapptz/discord.py
- - Install pexpect from pip if you don't already have it
- - Compile frotz (http://frotz.sourceforge.net/) in dumb mode and get ZORK1.DAT
-   from http://www.infocom-if.org/downloads/downloads.html
+ - bs4
 
 This is a small and useless bot for use on Discord. Before running it for the
 first time, you will need to create an application with a bot user at
@@ -22,19 +20,9 @@ are listed below:
   set to a single character such as . or !
 - token (string): The unique token corresponding to your application's bot user.
   You will need to supply this yourself.
-- game_prefix (string): All text to be send to the currently playing game should
-  be prefixed with this.
-- games->zork->frotz (string): The path to the frotz binary for running zork.
-- games->zork->datafile (string): The path to the ZORK1.DAT file.
-
 
 The syntax of the commands themselves is quite simple. Either single or double
 quotes are required around parameters that contain spaces. Commands list follows:
-
-- game start zork: start a game of Zork.
-- game end: End a game of Zork.
-- game input <text>: Send <text> to the game being played. Can use the game_prefix
-  instead as a shortcut.
 
 - poll create <pollname> <question> <answer1> <answer2> ...: Create a poll with a
   short name as an identifier, a question to be answered, and as many answers as
@@ -51,5 +39,9 @@ quotes are required around parameters that contain spaces. Commands list follows
 - clear <n>: Delete the n most recent messages in the channel
 
 - tex <maths>: Render maths as LaTeX code (assumed to be between $$)
+
+- metro <train line>: Get the status of <train line> on the Melbourne metro
+
+- weather: Get today's weather
 
 There are also some fun extras hidden in there for people who like to read the code.

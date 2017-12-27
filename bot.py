@@ -1,7 +1,6 @@
 import os
 import asyncio
 import discord
-import text_adventure
 import poll
 import image
 import random
@@ -10,6 +9,7 @@ import subprocess
 import weather
 import wolf
 import alert
+import metro
 
 class Bot(object):
     def __init__(self, client, config):
@@ -17,7 +17,7 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['shrug', 'lenny', 'game', 'poll', 'wa', 'waa', 'say', 'clear', 'tex']
+        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex']
         wolf.startWA(config['WA_appid'])
 
     @asyncio.coroutine
@@ -28,38 +28,6 @@ class Bot(object):
             yield from getattr(self, command)(message, *args)
         except AttributeError:
             pass
-
-    @asyncio.coroutine
-    def say(self, message, text):
-        print("!say " + text + " from " + message.author.display_name)
-        yield from self.client.send_message(discord.Object(id=self.config['main_channel']), text)
-
-    @asyncio.coroutine
-    def game(self, message, command, *args):
-        yield from getattr(self, 'game_' + command)(message, *args)
-
-    @asyncio.coroutine
-    def game_start(self, message, name):
-        if self.game_obj is not None:
-            return
-        self.game_obj = text_adventure.Game(self.config, name)
-        yield from self.client.change_presence(game = discord.Game(name = name))
-        yield from self.client.send_message(message.channel, self.game_obj.output())
-
-    @asyncio.coroutine
-    def game_input(self, message, inp):
-        if self.game_obj is None:
-            return
-        self.game_obj.inp(inp)
-        yield from self.client.send_message(message.channel, self.game_obj.output())
-
-    @asyncio.coroutine
-    def game_end(self, message):
-        if self.game_obj is None:
-            return
-        self.game_obj.stop()
-        self.game_obj = None
-        yield from self.client.change_presence(game = None)
 
     @asyncio.coroutine
     def poll(self, message, command, *args):
@@ -136,6 +104,19 @@ class Bot(object):
         yield from weather.task(self.client, self.config)
 
     @asyncio.coroutine
+    def store_weather_task(self):
+        yield from weather.store_weather_task(self.client, self.config)
+
+    @asyncio.coroutine
+    def weather(self, message):
+        result = weather.get_weather()
+        yield from self.client.send_message(message.channel, result)
+
+    @asyncio.coroutine
+    def metro(self, message, *ignore):
+        yield from metro.get_disruptions(message.content[7:], self.client, self.config)
+
+    @asyncio.coroutine
     def alert_task(self):
         yield from alert.task(self.client, self.config)
 
@@ -155,9 +136,9 @@ class Bot(object):
             answer += "\n" + result
         yield from self.client.send_message(message.channel, answer)
 
-
     @asyncio.coroutine
     def parse_chatter(self, message):
+         #print(message.content)
          pass
 #        if message.content.lower() == 'so' or ':so:' in message.content.lower():
 #            yield from self.client.send_message(message.channel, 'so')
@@ -183,14 +164,15 @@ class Bot(object):
         number = int(number)
         if message.channel.name != 'quotes' or number < 2 or number > 100:
             return
-        mgs = [] # Empty list to put all the messages in the log
-        mgs = yield from self.client.logs_from(message.channel, limit = number)
-        yield from self.client.delete_messages(mgs)
+        yield from self.client.delete_messages(self.client.logs_from(message.channel, limit = number))
    
     @asyncio.coroutine
     def lenny(self, message):
         yield from self.client.send_message(message.channel, '( ͡° ͜ʖ ͡°)')
 
     @asyncio.coroutine
-    def shrug(self, message):
-        yield from self.client.send_message(message.channel, '¯\_(ツ)_/¯')
+    def quotes(self, message, options):
+        search = message.content[8:]
+        process = subprocess.Popen(["grep", "-i", search, "quotes.local"], stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        yield from self.client.send_message(message.channel, output.decode())
