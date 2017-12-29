@@ -1,2 +1,8 @@
 __pycache__/*
 .*.swp
+quotes.local
+quotes.local.dat
+image.pyc
+eris.json
+.vim*
+.#wolf.py

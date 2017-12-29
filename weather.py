@@ -48,8 +48,16 @@ def store_weather():
         json.dump(weather_data, data)
 
 def get_stored_weather():
+    weather = get_weather()
+
     with open('/tmp/weather_data.txt', 'r') as data:
         weather_data = json.load(data) 
+    
+    for data in weather.values():
+        if data == '[Data not available]':
+            return 'Weather: ' + weather_data['precis'] + ' Top of ' + weather_data['max_temp'] + '°C, ' + weather_data['precip_chance'] + ' chance of up to ' + weather_data['precip_range'] + ' precipitation.'
+
+    weather_data = weather
     
     return 'Weather: ' + weather_data['precis'] + ' Top of ' + weather_data['max_temp'] + '°C, ' + weather_data['precip_chance'] + ' chance of up to ' + weather_data['precip_range'] + ' precipitation.'
 
@@ -58,8 +66,8 @@ def task(client, config):
     yield from client.wait_until_ready()
     while not client.is_closed:
         now = datetime.datetime.now()
-        endtime = datetime.datetime(now.year, now.month, now.day,5,00)
-        if now.time() > datetime.time(5,00):
+        endtime = datetime.datetime(now.year, now.month, now.day,5,30)
+        if now.time() > datetime.time(5,30):
             endtime += datetime.timedelta(1)
         yield from asyncio.sleep((endtime - now).total_seconds())
         yield from client.send_message(discord.Object(id = config['main_channel']), get_stored_weather())
@@ -72,7 +80,10 @@ def get_weather():
     ftp.quit()
 
     tree = etree.parse('/tmp/lukebot_weather.xml')
-    max_temp = tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='0']/element[@type='air_temperature_maximum']/text()")[0]
+    if(tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='0']/element[@type='air_temperature_maximum']/text()")):
+        max_temp = tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='0']/element[@type='air_temperature_maximum']/text()")[0]
+    else:
+        max_temp = '[Data not available]'
     
     if(tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='0']/element[@type='precipitation_range']/text()")):
         precip_range = tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='0']/element[@type='precipitation_range']/text()")[0]
@@ -89,4 +100,4 @@ def get_weather():
     else:
         precis = '[Data not available]'
 
-    return 'Weather: ' + precis + ' Top of ' + max_temp + '°C, ' + precip_chance + ' chance of up to ' + precip_range + ' precipitation.'
+    return {'max_temp' : max_temp, 'precip_range' : precip_range, 'precip_chance' : precip_chance, 'precis' : precis}

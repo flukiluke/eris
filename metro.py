@@ -12,22 +12,18 @@ def remove_tags(text):
 
     return soup.get_text()
 
-def get_name(line_name):
-    lines = {'alamein': 82, 'belgrave': 84, 'craigieburn': 85, 'cranbourne': 86, 'south morang': 87,
-             'frankston': 88, 'glen waverley': 89, 'hurstbridge': 90, 'lilydale': 91, 'pakenham': 92,
-             'sandringham': 93, 'stony point': 94, 'sunbury': 95, 'upfield': 96, 'werribee': 97, 
-             'williamstown': 98, 'mernda': '82'}
-    name = line_name.lower()
-    if name not in lines:
-        return 'Line not found'
-    return str(lines[name])
+def get_name(line_name, data):
+    for line in data['lines']:
+        if(line['line_name'].lower() == line_name.lower()):
+            return line['line_id']
+    return "Line not found"
 
 @asyncio.coroutine
 def get_disruptions(line_name, client, config):
-    line  = get_name(line_name)
-
     with urllib.request.urlopen("http://www.metrotrains.com.au/api?op=get_notify_data") as url:
         data = json.loads(url.read().decode())
+    
+    line  = get_name(line_name, data)
     
     if(line == 'Line not found'):
         yield from client.send_message(discord.Object(id = config['main_channel']), "Line not found")

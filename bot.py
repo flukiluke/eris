@@ -109,7 +109,8 @@ class Bot(object):
 
     @asyncio.coroutine
     def weather(self, message):
-        result = weather.get_weather()
+        weather_data = weather.get_weather()
+        result = 'Weather: ' + weather_data['precis'] + ' Top of ' + weather_data['max_temp'] + '°C, ' + weather_data['precip_chance'] + ' chance of up to ' + weather_data['precip_range'] + ' precipitation.'  
         yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
