@@ -11,8 +11,8 @@ into the eris.json config file. Then, invite it to a server by visiting
 https://discordapp.com/oauth2/authorize?client_id=123&scope=bot&permissions=3072
 where client_id is the client ID listed on the Application's page.
 
-eris.json contains a JSON-encoded object holding all configuration options. They
-are listed below:
+Copy eris_example.json to eris.json. This contains a JSON-encoded object holding
+all configuration options. They are listed below:
 
 - channels (array of strings): If non-empty, Eris will only respond on channels
   with these names. If empty, it responds on all channels.
