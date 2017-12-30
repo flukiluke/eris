@@ -109,8 +109,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def weather(self, message):
-        weather_data = weather.get_weather()
-        result = 'Weather: ' + weather_data['precis'] + ' Top of ' + weather_data['max_temp'] + '°C, ' + weather_data['precip_chance'] + ' chance of up to ' + weather_data['precip_range'] + ' precipitation.'  
+        result = weather.fetch_weather()
         yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
@@ -166,7 +165,7 @@ class Bot(object):
         if message.channel.name != 'quotes' or number < 2 or number > 100:
             return
         yield from self.client.delete_messages(self.client.logs_from(message.channel, limit = number))
-   
+
     @asyncio.coroutine
     def lenny(self, message):
         yield from self.client.send_message(message.channel, '( ͡° ͜ʖ ͡°)')
