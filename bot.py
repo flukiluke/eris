@@ -114,7 +114,8 @@ class Bot(object):
 
     @asyncio.coroutine
     def metro(self, message, *ignore):
-        yield from metro.get_disruptions(message.content[7:], self.client, self.config)
+        disruptions = metro.get_disruptions(message.content[7:], self.client, self.config)
+        yield from self.client.send_message(message.channel, disruptions)
 
     @asyncio.coroutine
     def alert_task(self):
