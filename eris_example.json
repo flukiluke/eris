@@ -1,6 +1,5 @@
 {
   "token": "Your token here",
-  "channels": ["general"],
   "main_channel": "<insert main channel id>",
   "cmd_prefix": "!",
   "WA_appid": "<Wolfram Alpha API key>"

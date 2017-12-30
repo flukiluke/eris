@@ -2,7 +2,10 @@ Eris - 2016
 
 Dependencies:
  - Install discord.py from https://github.com/Rapptz/discord.py
+ - lxml
  - bs4
+ - wolframalpha
+And their dependencies
 
 This is a small and useless bot for use on Discord. Before running it for the
 first time, you will need to create an application with a bot user at
