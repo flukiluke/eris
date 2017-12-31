@@ -18,7 +18,7 @@ def get_name(line_name, data):
             return line['line_id']
     return "Line not found"
 
-def get_disruptions(line_name, client, config):
+def get_disruptions(line_name):
     with urllib.request.urlopen("http://www.metrotrains.com.au/api?op=get_notify_data") as url:
         data = json.loads(url.read().decode())
 
