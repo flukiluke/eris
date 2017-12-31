@@ -12,8 +12,8 @@ def store_weather_task(client, config):
     yield from client.wait_until_ready()
     while not client.is_closed:
         now = datetime.datetime.now()
-        endtime = datetime.datetime(now.year, now.month, now.day,17,30)
-        if now.time() > datetime.time(17,30):
+        endtime = datetime.datetime(now.year, now.month, now.day,23,55)
+        if now.time() > datetime.time(23,55):
             endtime += datetime.timedelta(1)
         yield from asyncio.sleep((endtime - now).total_seconds())
         yield store_weather()
@@ -33,7 +33,7 @@ def get_weather(day):
     ftp = FTP('ftp.bom.gov.au')
     ftp.login()
     ftp.cwd('anon/gen/fwo')
-    ftp.retrbinary('RETR IDV10753.xml', open('/tmp/lukebot_weather.xml', 'wb').write)
+    ftp.retrbinary('RETR IDV10753.xml', open('/tmp/lukebot_dev_weather.xml', 'wb').write)
     ftp.quit()
 
     max_temp = precip_range = precip_chance = precis = None
@@ -59,17 +59,13 @@ def store_weather():
         json.dump(get_weather('1'), data)
 
 def fetch_weather():
-    current_weather = get_weather('0')
+    weather = get_weather('0')
+    
+    if(weather["max_temp"] is not None and weather["precis"] is not None):
+        if(weather["precip_chance"] is None):
+            return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C'
+        elif(weather["precip_chance"] == '0%' and weather["precip_range"] is None):
+            weather["precip_range"] = '0 mm' 
+        return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C, ' + weather['precip_chance'] + ' chance of up to ' + weather['precip_range'] + ' precipitation.'
 
-    if(any(not data for data in current_weather.values())):
-        if(os.path.exists('/tmp/weather_data.txt')):
-            with open('/tmp/weather_data.txt', 'r') as data:
-                weather = json.load(data)
-
-            return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C, ' + weather['precip_chance'] + ' chance of up to ' + weather['precip_range'] + ' precipitation. As of: ' + time.ctime(os.path.getctime('/tmp/weather_data.txt'))
-
-        return "Weather data not available. As of: " + time.ctime(time.time())
-
-    weather = current_weather
-
-    return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C, ' + weather['precip_chance'] + ' chance of up to ' + weather['precip_range'] + ' precipitation. As of: ' + time.ctime(time.time())
+    return 'Weather data incomplete'    
