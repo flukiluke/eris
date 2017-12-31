@@ -12,8 +12,8 @@ def store_weather_task(client, config):
     yield from client.wait_until_ready()
     while not client.is_closed:
         now = datetime.datetime.now()
-        endtime = datetime.datetime(now.year, now.month, now.day,17,30)
-        if now.time() > datetime.time(17,30):
+        endtime = datetime.datetime(now.year, now.month, now.day,23,55)
+        if now.time() > datetime.time(23,55):
             endtime += datetime.timedelta(1)
         yield from asyncio.sleep((endtime - now).total_seconds())
         yield store_weather()
