@@ -33,7 +33,7 @@ def get_weather(day):
     ftp = FTP('ftp.bom.gov.au')
     ftp.login()
     ftp.cwd('anon/gen/fwo')
-    ftp.retrbinary('RETR IDV10753.xml', open('/tmp/lukebot_dev_weather.xml', 'wb').write)
+    ftp.retrbinary('RETR IDV10753.xml', open('/tmp/lukebot_weather.xml', 'wb').write)
     ftp.quit()
 
     max_temp = precip_range = precip_chance = precis = None
