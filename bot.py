@@ -10,6 +10,7 @@ import weather
 import wolf
 import alert
 import metro
+import nasa
 
 class Bot(object):
     def __init__(self, client, config):
@@ -17,8 +18,16 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex']
+        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro']
         wolf.startWA(config['WA_appid'])
+
+    @asyncio.coroutine
+    def astro(self, message):
+        (content, is_embed) = nasa.get_astropod()
+        if is_embed:
+            yield from self.client.send_message(message.channel, embed=content)
+        else:
+            yield from self.client.send_message(message.channel, content)
 
     @asyncio.coroutine
     def do_command(self, message, command, *args):
