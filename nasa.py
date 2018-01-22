@@ -8,7 +8,7 @@ def get_astropod():
     result = requests.get(url)
 
     if result.status_code != 200:
-        quit()
+        return "SPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE isn't working right now. Please check your sky, and try again."
 
     data = result.json()
 
