@@ -5,6 +5,7 @@ Dependencies:
  - lxml
  - bs4
  - wolframalpha
+ - image
 And their dependencies
 
 This is a small and useless bot for use on Discord. Before running it for the
