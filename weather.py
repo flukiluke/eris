@@ -66,7 +66,7 @@ def fetch_weather():
             return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C'
         elif(weather["precip_chance"] == '0%' and weather["precip_range"] is None):
             weather["precip_range"] = '0 mm' 
-        else:
+        elif(weather['precip_range'] is None):
             return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C, ' + weather['precip_chance'] + ' chance of precipitation' 
         return 'Weather: ' + weather['precis'] + ' Top of ' + weather['max_temp'] + '°C, ' + weather['precip_chance'] + ' chance of up to ' + weather['precip_range'] + ' precipitation.'
         
