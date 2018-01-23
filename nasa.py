@@ -30,16 +30,3 @@ def get_astropod(api_key):
     e.url = "https://apod.nasa.gov/apod/astropix.html"
     return (e, True)
 
-def get_spy(lat, long_):
-    url = "https://api.nasa.gov/planetary/earth/imagery?api_key=" + api_key + "&lat=" + lat + "&long=" + long_
-
-    result = requests.get(url)
-
-    if result.status_code != 200:
-        return ("SPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE isn't working right now. Please check your sky, and try again.", False)
-
-    data = result.json()
-
-    img_url = data['url']
-
-    return discord.Embed().set_image(url=img_url)
