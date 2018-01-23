@@ -2,5 +2,6 @@
   "token": "Your token here",
   "main_channel": "<insert main channel id>",
   "cmd_prefix": "!",
-  "WA_appid": "<Wolfram Alpha API key>"
+  "WA_appid": "<Wolfram Alpha API key>",
+  "NASA-API": "<NASA API key>"
 }
