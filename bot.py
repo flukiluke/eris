@@ -23,7 +23,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def astro(self, message):
-        (content, is_embed) = nasa.get_astropod()
+        (content, is_embed) = nasa.get_astropod(api_key=self.config['NASA-API'])
         if is_embed:
             yield from self.client.send_message(message.channel, embed=content)
         else:

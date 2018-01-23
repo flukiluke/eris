@@ -2,9 +2,7 @@ import requests
 import discord
 import util
 
-api_key = "5f6aY0lmpr5JZP9yroHa78SgWyTDBhps96zMTqhw"
-
-def get_astropod():
+def get_astropod(api_key):
     url = "https://api.nasa.gov/planetary/apod?api_key=" + api_key
 
     result = requests.get(url)
