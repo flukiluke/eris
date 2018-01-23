@@ -6,24 +6,33 @@ Dependencies:
  - bs4
  - wolframalpha
  - image
-And their dependencies
+ - requests
+And their dependencies (let pip take care of things for you)
 
 This is a small and useless bot for use on Discord. Before running it for the
-first time, you will need to create an application with a bot user at
-https://discordapp.com/developers/applications/me then copy the bot user token
-into the eris.json config file. Then, invite it to a server by visiting
-https://discordapp.com/oauth2/authorize?client_id=123&scope=bot&permissions=3072
-where client_id is the client ID listed on the Application's page.
+first time, you will need to:
 
-Copy eris_example.json to eris.json. This contains a JSON-encoded object holding
-all configuration options. They are listed below:
+ - Copy eris_example.json to eris.json. This contains a JSON-encoded object
+   holding all configuration options. They are listed below.
+ - Create an application with a bot user at
+   https://discordapp.com/developers/applications/me then copy the bot user
+   token into the eris.json config file.
+ - Obtain API keys for other services as listed in the config file. Feel free
+   to ignore some or all of them.
+ - Invite it to a server by visiting
+   https://discordapp.com/oauth2/authorize?client_id=123&scope=bot&permissions=3072
+   where client_id is the client ID listed on the Application's page.
 
-- channels (array of strings): If non-empty, Eris will only respond on channels
-  with these names. If empty, it responds on all channels.
-- cmd_prefix (string): All bot commands must be prefixed by this string. Usually
-  set to a single character such as . or !
-- token (string): The unique token corresponding to your application's bot user.
-  You will need to supply this yourself.
+eris.json settings:
+ - token (string): The unique token corresponding to your application's bot user.
+   You will need to supply this yourself.
+ - main_channel (string): The Discord ID of the channel you want to designate as
+   the 'main' channel.
+ - cmd_prefix (string): All bot commands must be prefixed by this string. Usually
+   set to a single character such as . or !
+ - WA_appid (string): API key for Wolfram Alpha
+ - NASA-API (string): API keey for NASA
+
 
 The syntax of the commands themselves is quite simple. Either single or double
 quotes are required around parameters that contain spaces. Commands list follows:
@@ -41,11 +50,9 @@ quotes are required around parameters that contain spaces. Commands list follows
 - waa <text>: Make Wolfram Alpha query with extended results
 
 - clear <n>: Delete the n most recent messages in the channel
-
 - tex <maths>: Render maths as LaTeX code (assumed to be between $$)
-
 - metro <train line>: Get the status of <train line> on the Melbourne metro
-
 - weather: Get today's weather
+- astro: Get the Astronomy Picture of the Day.
 
 There are also some fun extras hidden in there for people who like to read the code.
