@@ -11,6 +11,7 @@ import wolf
 import alert
 import metro
 import nasa
+import tramtracker
 
 class Bot(object):
     def __init__(self, client, config):
@@ -18,7 +19,7 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro']
+        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram']
         wolf.startWA(config['WA_appid'])
 
     @asyncio.coroutine
@@ -186,3 +187,30 @@ class Bot(object):
         process = subprocess.Popen(["grep", "-i", search, "quotes.local"], stdout=subprocess.PIPE)
         output, error = process.communicate()
         yield from self.client.send_message(message.channel, output.decode())
+
+    @asyncio.coroutine
+    def tram_route(self, message, stop, route, direction = None, *args):
+        services = tramtracker.get_next_services(tramtracker.get_stops(stop, route),route, False, direction)
+        yield from self.client.send_message(message.channel, services)
+
+    @asyncio.coroutine
+    def tram_stop(self, message, stop, *args):
+        stops = tramtracker.get_all_stops(stop)
+        yield from self.client.send_message(message.channel, stops['message'])
+        msg = yield from self.client.wait_for_message(author=message.author, check=tramtracker.check_tram_number)
+        
+        try:
+            stop = list(stops['matches'].values())[int(msg.content)]
+        except IndexError:         
+            yield from self.client.send_message(message.channel, 'Invalid selection') 
+        services = tramtracker.get_next_services(stop, stop['route'], True)
+        yield from self.client.send_message(message.channel, services)
+
+    @asyncio.coroutine
+    def tram_help(self, message, *args):
+        messages = 'Syntax is: \n-!tram route [stop_number] [route] [direction (optional)] - Gives you the departures for a specific line at a specific stop \n-!tram stop [stop_number] [direction] - Gives you the departures from a stop for all routes'
+        yield from self.client.send_message(message.channel, messages)
+
+    @asyncio.coroutine
+    def tram(self, message, command, *args):
+        yield from getattr(self, 'tram_' + command)(message, *args)
