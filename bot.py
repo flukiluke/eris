@@ -19,7 +19,7 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'weather', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram']
+        self.groups = ['metro', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram']
         wolf.startWA(config['WA_appid'])
 
     @asyncio.coroutine
@@ -112,15 +112,6 @@ class Bot(object):
     @asyncio.coroutine
     def weather_task(self):
         yield from weather.task(self.client, self.config)
-
-    @asyncio.coroutine
-    def store_weather_task(self):
-        yield from weather.store_weather_task(self.client, self.config)
-
-    @asyncio.coroutine
-    def weather(self, message):
-        result = weather.fetch_weather()
-        yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
     def metro(self, message, *ignore):

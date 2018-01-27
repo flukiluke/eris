@@ -35,6 +35,5 @@ def interesting_message(message):
 
 client.loop.create_task(bot.fortune_task())
 client.loop.create_task(bot.weather_task())
-client.loop.create_task(bot.store_weather_task())
 client.loop.create_task(bot.alert_task())
 client.run(config['token'])

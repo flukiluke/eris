@@ -8,17 +8,6 @@ from lxml import etree
 import json
 
 @asyncio.coroutine
-def store_weather_task(client, config):
-    yield from client.wait_until_ready()
-    while not client.is_closed:
-        now = datetime.datetime.now()
-        endtime = datetime.datetime(now.year, now.month, now.day,23,55)
-        if now.time() > datetime.time(23,55):
-            endtime += datetime.timedelta(1)
-        yield from asyncio.sleep((endtime - now).total_seconds())
-        yield store_weather()
-
-@asyncio.coroutine
 def task(client, config):
     yield from client.wait_until_ready()
     while not client.is_closed:
@@ -52,11 +41,6 @@ def get_weather(day):
         precis = tree.xpath("//area[@aac='VIC_PT042']/forecast-period[@index='" + day + "']/text[@type='precis']/text()")[0]
 
     return {'max_temp' : max_temp, 'precip_range' : precip_range, 'precip_chance' : precip_chance, 'precis' : precis}
-
-def store_weather():
-    with open('/tmp/weather_data.txt', 'w') as data:
-        data.truncate(0)
-        json.dump(get_weather('1'), data)
 
 def fetch_weather():
     weather = get_weather('0')
