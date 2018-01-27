@@ -75,7 +75,7 @@ def get_next_services(stop, route, all_services, direction = None):
         elif down_data and down_data['hasError'] == False and down_data['responseObject']:
             data['responseObject'] = down_data['responseObject']
             data['hasError'] = False
-        elif down_data and up_data['responseObject'] == False and up_data['responseObject']:
+        elif up_data and up_data['hasError'] == False and up_data['responseObject']:
             data['responseObject'] = up_data['responseObject']
             data['hasError'] = False
     message = ''
