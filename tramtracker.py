@@ -60,20 +60,24 @@ def get_next_services(stop, route, all_services, direction = None):
     if direction == 'up' or direction == 'down':
         with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop[direction] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
             data = json.loads(url.read().decode())
-    else:
-        with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['up'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
-            up_data = json.loads(url.read().decode())
-        with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['down'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
-            down_data = json.loads(url.read().decode())
-        if up_data['hasError'] == False and down_data['hasError'] == False:
-            if down_data['responseObject'] and up_data['responseObject']:
-                data['responseObject'] = down_data['responseObject'] + up_data['responseObject']
-            elif down_data['responseObject']:
-                data['responseObject'] = down_data['responseObject']
-            elif up_data['responseObject']:
-                data['responseObject'] = up_data['responseObject']
+    else: 
+        data = {'hasError' : True}  
+      
+        if 'up' in stop:
+            with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['up'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:        
+                up_data = json.loads(url.read().decode())
+        if 'down' in stop:
+            with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['down'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
+                down_data = json.loads(url.read().decode())
+        if up_data and down_data and up_data['hasError'] == False and down_data['hasError'] == False and down_data['responseObject'] and up_data['responseObject']:
+            data['responseObject'] = down_data['responseObject'] + up_data['responseObject']
             data['hasError'] = False
-   
+        elif down_data and down_data['hasError'] == False and down_data['responseObject']:
+            data['responseObject'] = down_data['responseObject']
+            data['hasError'] = False
+        elif down_data and up_data['responseObject'] == False and up_data['responseObject']:
+            data['responseObject'] = up_data['responseObject']
+            data['hasError'] = False
     message = ''
     if(data['hasError'] == False):
         if data['responseObject']:

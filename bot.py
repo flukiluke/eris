@@ -208,7 +208,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def tram_help(self, message, *args):
-        messages = 'Syntax is: \n-!tram route [stop_number] [route] [direction (optional)] - Gives you the departures for a specific line at a specific stop \n-!tram stop [stop_number] [direction] - Gives you the departures from a stop for all routes'
+        messages = 'Syntax is: \n-!tram route [stop_number] [route] [direction (optional)] - Gives you the departures for a specific line at a specific stop \n-!tram stop [stop_number] - Gives you the departures from a stop for all routes'
         yield from self.client.send_message(message.channel, messages)
 
     @asyncio.coroutine
