@@ -22,17 +22,17 @@ def get_all_stops(stop):
         if stop in routes[route]:
             matched[routes[route][stop]['stop_name']] = routes[route][stop]
             matched[routes[route][stop]['stop_name']].update({'route' : route})
-         
-    if len(matched) == 0: 
-        return {'message' : 'No matches found', 'matches' : None}
-    
-    message = str(len(matched)) + ' stops found \n' 
 
-    for count, match in enumerate(matched): 
+    if len(matched) == 0:
+        return {'message' : 'No matches found', 'matches' : None}
+
+    message = str(len(matched)) + ' stops found \n'
+
+    for count, match in enumerate(matched):
         result = str(count) + ' : ' + match + '\n'
         message += result
-    
-    message += 'Please enter which stop (0 to ' + str(len(matched) - 1) + ') you want' 
+
+    message += 'Please enter which stop (0 to ' + str(len(matched) - 1) + ') you want'
     return {'message' : message, 'matches' : matched}
 
 def get_stops(stop, route):
@@ -40,7 +40,7 @@ def get_stops(stop, route):
         stops = json.load(data)
 
     if route not in stops:
-        return 'ERROR_1' 
+        return 'ERROR_1'
     elif stop in stops[route]:
         return stops[route][stop]
     else:
@@ -54,30 +54,33 @@ def get_next_services(stop, route, all_services, direction = None):
         return 'Error: Could not find stop'
     elif stop is None:
         return 'Error: Something went very very wrong, shout at your nearest Eris dev'
-   
-    data = dict()    
- 
+
+    data = dict()
+
     if direction == 'up' or direction == 'down':
         with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop[direction] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
             data = json.loads(url.read().decode())
-    else: 
-        data = {'hasError' : True}  
-      
+    else:
+        data = {'hasError' : True}
+        up_data = {'hasError' : True}
+        down_data = {'hasError' : True}
+
         if 'up' in stop:
-            with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['up'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:        
+            with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['up'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
                 up_data = json.loads(url.read().decode())
         if 'down' in stop:
             with urllib.request.urlopen(base_url + 'GetNextPredictionsForStop.ashx?stopNo=' + stop['down'] + '&routeNo=' + ('0' if all_services else route) + '&isLowFloor=false') as url:
                 down_data = json.loads(url.read().decode())
-        if up_data and down_data and up_data['hasError'] == False and down_data['hasError'] == False and down_data['responseObject'] and up_data['responseObject']:
+        if up_data['hasError'] == False and down_data['hasError'] == False and down_data['responseObject'] and up_data['responseObject']:
             data['responseObject'] = down_data['responseObject'] + up_data['responseObject']
             data['hasError'] = False
-        elif down_data and down_data['hasError'] == False and down_data['responseObject']:
+        elif down_data['hasError'] == False and down_data['responseObject']:
             data['responseObject'] = down_data['responseObject']
             data['hasError'] = False
-        elif up_data and up_data['hasError'] == False and up_data['responseObject']:
+        elif up_data['hasError'] == False and up_data['responseObject']:
             data['responseObject'] = up_data['responseObject']
             data['hasError'] = False
+
     message = ''
     if(data['hasError'] == False):
         if data['responseObject']:
@@ -91,4 +94,4 @@ def get_next_services(stop, route, all_services, direction = None):
         else:
             return 'Error: Could not find upcoming services for stop id ' + stop['stop_number']
     else:
-        return 'Error: Could not load JSON upcoming services data' 
+        return 'Error: Could not load JSON upcoming services data'
