@@ -12,6 +12,7 @@ import alert
 import metro
 import nasa
 import tramtracker
+import datetime 
 
 class Bot(object):
     def __init__(self, client, config):
@@ -29,6 +30,22 @@ class Bot(object):
             yield from self.client.send_message(message.channel, embed=content)
         else:
             yield from self.client.send_message(message.channel, content)
+
+    @asyncio.coroutine
+    def astro_task(self, *args):
+        yield from self.client.wait_until_ready()
+        while not self.client.is_closed:
+            now = datetime.datetime.now()
+            endtime = datetime.datetime(now.year, now.month, now.day,9,30)
+            if now.time() > datetime.time(9,30):
+                endtime += datetime.timedelta(1)
+            yield from asyncio.sleep((endtime - now).total_seconds())
+            (content, is_embed) = nasa.get_astropod(api_key=self.config['NASA-API'])
+            if is_embed:
+                yield from self.client.send_message(discord.Object(id = self.config['main_channel']), embed=content)
+            else:
+                yield from self.client.send_message(discord.Object(id = self.config['main_channel']), content)
+         
 
     @asyncio.coroutine
     def do_command(self, message, command, *args):
