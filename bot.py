@@ -194,7 +194,7 @@ class Bot(object):
         search = message.content[8:]
         process = subprocess.Popen(["fortune", "quotes.local", "-i", "-m", search], stdout=subprocess.PIPE)
         output, error = process.communicate()
-        result = str.replace(output.decode(), '%\n','-------------------\n')
+        result = str.replace(output.decode(), '%\n','------------\n')
         yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
