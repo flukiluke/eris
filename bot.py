@@ -192,9 +192,10 @@ class Bot(object):
     @asyncio.coroutine
     def quotes(self, message, options):
         search = message.content[8:]
-        process = subprocess.Popen(["grep", "-i", search, "quotes.local"], stdout=subprocess.PIPE)
+        process = subprocess.Popen(["fortune", "quotes.local", "-i", "-m", search], stdout=subprocess.PIPE)
         output, error = process.communicate()
-        yield from self.client.send_message(message.channel, output.decode())
+        result = str.replace(output.decode(), '%\n','-------------------\n')
+        yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
     def tram_route(self, message, stop, route, direction = None, *args):
