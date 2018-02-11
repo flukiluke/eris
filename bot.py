@@ -42,9 +42,9 @@ class Bot(object):
             yield from asyncio.sleep((endtime - now).total_seconds())
             (content, is_embed) = nasa.get_astropod(api_key=self.config['NASA-API'])
             if is_embed:
-                yield from self.client.send_message(discord.Object(id = self.config['main_channel']), embed=content)
+                yield from self.client.send_message(discord.Object(id = self.config['space_channel']), embed=content)
             else:
-                yield from self.client.send_message(discord.Object(id = self.config['main_channel']), content)
+                yield from self.client.send_message(discord.Object(id = self.config['space_channel']), content)
          
 
     @asyncio.coroutine
