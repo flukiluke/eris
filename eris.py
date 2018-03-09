@@ -5,6 +5,7 @@ import logging
 import shlex
 import configure
 import bot
+import quotes
 
 CONFIG_FILE = 'eris.json'
 
@@ -20,7 +21,9 @@ def custom_lex(string):
 def on_message(message):
     if not interesting_message(message):
         return
-    if message.content.startswith(config['cmd_prefix']):
+    elif is_quote(message) is True:
+        quotes.parse(message, config['quotes_file'])
+    elif message.content.startswith(config['cmd_prefix']):
         try:
             tokens = shlex.split(message.content[1:])
         except:
@@ -32,6 +35,11 @@ def interesting_message(message):
     if message.author == client.user:
         return False
     return True
+
+def is_quote(message):
+    if message.channel.id == config['quote_channel']:
+        return True
+    return False
 
 client.loop.create_task(bot.fortune_task())
 client.loop.create_task(bot.weather_task())

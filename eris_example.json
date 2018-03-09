@@ -1,6 +1,8 @@
 {
   "token": "Your token here",
   "main_channel": "<insert main channel id>",
+  "quote_channel": "<insert quote channel id>",
+  "quotes_file": "<insert quotes file relative to base dir>",
   "cmd_prefix": "!",
   "WA_appid": "<Wolfram Alpha API key>",
   "NASA-API": "<NASA API key>"
