@@ -181,9 +181,9 @@ class Bot(object):
     @asyncio.coroutine
     def clear(self, message, number):
         number = int(number)
-        if message.channel.name != 'quotes' or number < 2 or number > 100:
+        if message.channel.id != self.config['quote_channel'] or number < 2 or number > 100 or message.author.id not in self.config['auth_users']:
             return
-        yield from self.client.delete_messages(self.client.logs_from(message.channel, limit = number))
+        yield from self.client.purge_from(message.channel, limit = number)
 
     @asyncio.coroutine
     def lenny(self, message):

@@ -19,10 +19,10 @@ def custom_lex(string):
 
 @client.async_event
 def on_message(message):
+    if is_quote(message) is True:
+        quotes.parse(message, config['quotes_file'])
     if not interesting_message(message):
         return
-    elif is_quote(message) is True:
-        quotes.parse(message, config['quotes_file'])
     elif message.content.startswith(config['cmd_prefix']):
         try:
             tokens = shlex.split(message.content[1:])
