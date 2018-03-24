@@ -180,7 +180,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def clear(self, message, number):
-        number = int(number)
+        number = int(number) + 1
         if message.channel.id != self.config['quote_channel'] or number < 2 or number > 100 or message.author.id not in self.config['auth_users']:
             return
         yield from self.client.purge_from(message.channel, limit = number)
