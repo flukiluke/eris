@@ -12,7 +12,7 @@ import alert
 import metro
 import nasa
 import tramtracker
-import datetime 
+import datetime
 
 class Bot(object):
     def __init__(self, client, config):
@@ -57,7 +57,7 @@ class Bot(object):
                 yield from self.client.send_message(discord.Object(id = self.config['space_channel']), embed=content)
             else:
                 yield from self.client.send_message(discord.Object(id = self.config['space_channel']), content)
-         
+
 
     @asyncio.coroutine
     def do_command(self, message, command, *args):
@@ -144,8 +144,8 @@ class Bot(object):
 
     @asyncio.coroutine
     def metro(self, message, *ignore):
-        disruptions = metro.get_disruptions(message.content[7:])
-        yield from self.client.send_message(message.channel, disruptions)
+        line = message.content[7:]
+        yield from metro.get_disruptions(line, self.client, message.channel)
 
     @asyncio.coroutine
     def alert_task(self):
@@ -219,11 +219,11 @@ class Bot(object):
         stops = tramtracker.get_all_stops(stop)
         yield from self.client.send_message(message.channel, stops['message'])
         msg = yield from self.client.wait_for_message(author=message.author, check=tramtracker.check_tram_number)
-        
+
         try:
             stop = list(stops['matches'].values())[int(msg.content)]
-        except IndexError:         
-            yield from self.client.send_message(message.channel, 'Invalid selection') 
+        except IndexError:
+            yield from self.client.send_message(message.channel, 'Invalid selection')
         services = tramtracker.get_next_services(stop, stop['route'], True)
         yield from self.client.send_message(message.channel, services)
 
