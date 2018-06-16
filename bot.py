@@ -12,6 +12,7 @@ import alert
 import metro
 import nasa
 import tramtracker
+import quotes
 import datetime
 
 class Bot(object):
@@ -20,7 +21,7 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather']
+        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather']
         wolf.startWA(config['WA_appid'])
 
     async def gather(self, message):
@@ -131,12 +132,7 @@ class Bot(object):
         yield from self.client.wait_until_ready()
         while not self.client.is_closed:
             yield from asyncio.sleep(random.randint(30 * 60 * 60, 40 * 60 * 60))
-            yield from self.client.send_message(discord.Object(id = self.config['main_channel']), self.fortune())
-
-    def fortune(self):
-        process = subprocess.Popen(["fortune", "quotes.local"], stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        return output.decode()
+            yield from self.client.send_message(discord.Object(id = self.config['main_channel']), quotes.choose())
 
     @asyncio.coroutine
     def weather_task(self):
@@ -202,11 +198,12 @@ class Bot(object):
         yield from self.client.send_message(message.channel, '( ͡° ͜ʖ ͡°)')
 
     @asyncio.coroutine
-    def quotes(self, message, options):
+    def quote(self, message, *ignore):
         search = message.content[8:]
-        process = subprocess.Popen(["fortune", "quotes.local", "-i", "-m", search], stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        result = str.replace(output.decode(), '%\n','------------\n')
+        if search == '':
+            result = quotes.choose()
+        else:
+            result = '\n------------\n'.join(quotes.search(search))
         yield from self.client.send_message(message.channel, result)
 
     @asyncio.coroutine
