@@ -20,8 +20,7 @@ def custom_lex(string):
 @client.async_event
 def on_message(message):
     if is_quote(message) is True:
-        if quotes.parse(message, config['quotes_file']) is not True and message.author.id != config['bot_id'] and message.content.startswith(config['cmd_prefix']) is not True:
-           yield from client.send_message(discord.Object(id = config['quote_channel']), config['wrong_format_msg'])
+        quotes.parse(message, config['quotes_file'])
     if not interesting_message(message):
         return
     elif message.content.startswith(config['cmd_prefix']):
