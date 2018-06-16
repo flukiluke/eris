@@ -20,8 +20,20 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram']
+        self.groups = ['metro', 'quotes', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather']
         wolf.startWA(config['WA_appid'])
+
+    async def gather(self, message):
+        logfile = open('logs/' + message.channel.name + '.log', 'w')
+        earliest_msg = message
+        while True:
+            try:
+                async for message in self.client.logs_from(message.channel, before=earliest_msg):
+                    logfile.write(message.timestamp.isoformat() +  '\t' + message.author.name + '\t' + message.content + '\n')
+                earliest_msg = message
+            except:
+                break
+        logfile.close()
 
     @asyncio.coroutine
     def astro(self, message):
