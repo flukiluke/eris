@@ -2,12 +2,10 @@ import asyncio
 from datetime import datetime
 import discord
 
-alerts = [("@everyone REMINDER: 3rd year enrolment opens next week.", datetime(2018, 1, 23, 10, 0)),
-          ("@everyone REMINDER: 2nd year enrolment opens next week.", datetime(2018, 1, 25, 10, 0)),
-          ("@everyone REMINDER: 1st year enrolment opens next week.", datetime(2018, 1, 30, 10, 0)),
-          ("@everyone REMINDER: 3rd year enrolment opens in an hour.", datetime(2018, 1, 30, 9, 0)),
-          ("@everyone REMINDER: 2nd year enrolment opens in an hour.", datetime(2018, 2, 1, 9, 0)),
-          ("@everyone REMINDER: 1st year enrolment opens in an hour.", datetime(2018, 2, 6, 9, 0)),
+alerts = [("@everyone REMINDER: 3rd year registration opens next week.", datetime(2018, 6, 26, 10, 0)),
+          ("@everyone REMINDER: 2nd year registration opens next week.", datetime(2018, 6, 28, 10, 0)),
+          ("@everyone REMINDER: 3rd year registration opens in an hour.", datetime(2018, 7, 3, 9, 0)),
+          ("@everyone REMINDER: 2nd year registration opens in an hour.", datetime(2018, 7, 5, 9, 0)),
           ]
 
 @asyncio.coroutine
