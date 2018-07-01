@@ -199,7 +199,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def quote(self, message, *ignore):
-        search = message.content[8:]
+        search = message.content[7:]
         if search == '':
             result = quotes.choose()
         else:
