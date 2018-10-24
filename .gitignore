@@ -2,6 +2,7 @@ __pycache__/*
 *.pyc
 .*.swp
 quotes.local
+quotes.db
 quotes.local.dat
 eris.json
 .vim*
