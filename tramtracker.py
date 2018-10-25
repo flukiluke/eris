@@ -13,8 +13,8 @@ def check_tram_number(msg):
 def build_dict(seq, key):
      return dict((d[key].split()[0], dict(d, index=index)) for (index, d) in enumerate(seq))
 
-def get_all_stops(stop):
-    with open('/tmp/tram.json', 'r') as data:
+def get_all_stops(stop, tram_stop_file):
+    with open(tram_stop_file, 'r') as data:
         routes = json.load(data)
 
     matched = OrderedDict()
@@ -35,8 +35,8 @@ def get_all_stops(stop):
     message += 'Please enter which stop (0 to ' + str(len(matched) - 1) + ') you want'
     return {'message' : message, 'matches' : matched}
 
-def get_stops(stop, route):
-    with open('/tmp/tram.json', 'r') as data:
+def get_stops(stop, route, tram_stop_file):
+    with open(tram_stop_file, 'r') as data:
         stops = json.load(data)
 
     if route not in stops:

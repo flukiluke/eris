@@ -6,5 +6,8 @@
   "cmd_prefix": "!",
   "WA_appid": "<Wolfram Alpha API key>",
   "NASA-API": "<NASA API key>",
-  "auth_users": ["<list of users by id which can delete quotes>"]
+  "auth_users": ["<list of users by id which can delete quotes>"],
+  "bot_id": "<user id of bot>",
+  "wrong_format_msg": "<error message when quote is in the wrong format>",
+  "space_channel": "<id of channel where to send NASA space image of the day>"
 }

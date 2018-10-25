@@ -208,12 +208,12 @@ class Bot(object):
 
     @asyncio.coroutine
     def tram_route(self, message, stop, route, direction = None, *args):
-        services = tramtracker.get_next_services(tramtracker.get_stops(stop, route),route, False, direction)
+        services = tramtracker.get_next_services(tramtracker.get_stops(stop, route, self.config['tram_stop_file']),route, False, direction)
         yield from self.client.send_message(message.channel, services)
 
     @asyncio.coroutine
     def tram_stop(self, message, stop, *args):
-        stops = tramtracker.get_all_stops(stop)
+        stops = tramtracker.get_all_stops(stop, self.config['tram_stop_file'])
         yield from self.client.send_message(message.channel, stops['message'])
         msg = yield from self.client.wait_for_message(author=message.author, check=tramtracker.check_tram_number)
 
