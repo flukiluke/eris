@@ -13,6 +13,7 @@ import metro
 import nasa
 import tramtracker
 import quotes
+import translate
 import datetime
 
 class Bot(object):
@@ -21,20 +22,24 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather']
+        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl']
         wolf.startWA(config['WA_appid'])
 
-    async def gather(self, message):
-        logfile = open('logs/' + message.channel.name + '.log', 'w')
-        earliest_msg = message
-        while True:
-            try:
-                async for message in self.client.logs_from(message.channel, before=earliest_msg):
-                    logfile.write(message.timestamp.isoformat() +  '\t' + message.author.name + '\t' + message.content + '\n')
-                earliest_msg = message
-            except:
-                break
-        logfile.close()
+    @asyncio.coroutine
+    def tl(self, message, *ignore):
+        yield from self.client.send_message(message.channel, translate.translate(message.content.split(' ', 1)[1]))
+
+    # async def gather(self, message):
+    #    logfile = open('logs/' + message.channel.name + '.log', 'w')
+    #    earliest_msg = message
+    #    while True:
+    #        try:
+    #            async for message in self.client.logs_from(message.channel, before=earliest_msg):
+    #                logfile.write(message.timestamp.isoformat() +  '\t' + message.author.name + '\t' + message.content + '\n')
+    #            earliest_msg = message
+    #        except:
+    #            break
+    #    logfile.close()
 
     @asyncio.coroutine
     def astro(self, message):
