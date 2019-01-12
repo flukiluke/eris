@@ -1,10 +1,10 @@
 import requests
 
-def translate(text):
+def translate(text, language = 'en'):
     url = "https://translate-service.scratch.mit.edu/translate"
-
+    
     response = requests.get(url, params={
-        'language': 'en',
+        'language': language,
         'text': text
     })
     if response.status_code != 200:

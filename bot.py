@@ -15,6 +15,7 @@ import tramtracker
 import quotes
 import translate
 import datetime
+import langcodes
 
 class Bot(object):
     def __init__(self, client, config):
@@ -22,12 +23,24 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl']
+        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl', 'tll']
         wolf.startWA(config['WA_appid'])
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
         yield from self.client.send_message(message.channel, translate.translate(message.content.split(' ', 1)[1]))
+
+    @asyncio.coroutine
+    def tll(self, message, language, *args):
+        try:
+            language_code = str(langcodes.find(language))
+        except LookupError:
+            yield from self.client.send_message(message.channel, 'Could not find language')
+            return
+        except:
+            yield from self.client.send_message(message.channel, 'A language lookup error occured')
+            return
+        yield from self.client.send_message(message.channel, translate.translate(message.content.split(' ', 2)[2], language_code))
 
     # async def gather(self, message):
     #    logfile = open('logs/' + message.channel.name + '.log', 'w')
