@@ -13,7 +13,7 @@ def insert(table, data):
     c = conn.cursor()
     keys = [*data]
     template_list = ','.join(['?'] * len(data))
-    query = "INSERT INTO {} ({','.join(keys)}) VALUES ({})".format(table, template_list)
+    query = "INSERT INTO {} ({}) VALUES ({})".format(table, ','.join(keys), template_list)
     c.execute(query, tuple(data[k] for k in keys))
     conn.commit()
 
