@@ -17,6 +17,8 @@ def task(client, config):
 @asyncio.coroutine
 def queue(target, time, message):
     when = parse(time, locales=['en-AU'])
+    if when < datetime.now():
+        when = parse('in ' + time, locales=['en-AU'])
     db.insert('alerts', {'target': target, 'time': when.timestamp(), 'message': message})
     delay = (when - datetime.now()).total_seconds()
     yield from asyncio.sleep(delay)
