@@ -7,7 +7,8 @@ Dependencies:
  - wolframalpha
  - image
  - requests
- - python-dateutil
+ - dateparser
+ - langcodes
 And their dependencies (let pip take care of things for you)
 
 This is a small and useless bot for use on Discord. Before running it for the
@@ -50,6 +51,9 @@ quotes are required around parameters that contain spaces. Commands list follows
 
 - wa <text>: Make Wolfram Alpha query with brief results
 - waa <text>: Make Wolfram Alpha query with extended results
+
+- tl <text>: Translate text to English
+- tll <language> <text>: Translate text to language
 
 - clear <n>: Delete the n most recent messages in the channel
 - tex <maths>: Render maths as LaTeX code (assumed to be between $$)

@@ -10,7 +10,7 @@ def send_alert(alert, client, channel):
     yield from client.send_message(channel, message)
 
 def remove_tags(text):
-    soup = BeautifulSoup(text, "html")
+    soup = BeautifulSoup(text, features="lxml")
 
     for tag in soup.find_all('div'):
         tag.decompose()
