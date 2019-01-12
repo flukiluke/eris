@@ -23,8 +23,20 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl', 'tll']
+        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl', 'tll', 'remind']
         wolf.startWA(config['WA_appid'])
+
+    @asyncio.coroutine
+    def remind(self, message, *args):
+        if len(args) != 3:
+            yield from self.client.send_message(message.channel, "remind <target> <time> <message>")
+            return
+        if args[0] == 'all':
+            target = '@everyone'
+        elif args[0] == 'me':
+            target = message.author.mention
+        yield from self.client.send_message(message.channel, target)
+        alert.add(target, args[1], args[2])
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
@@ -183,17 +195,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def parse_chatter(self, message):
-         #print(message.content)
          pass
-#        if message.content.lower() == 'so' or ':so:' in message.content.lower():
-#            yield from self.client.send_message(message.channel, 'so')
-#       elif message.content.startswith(self.config['game_prefix']) and self.game_obj is not None:
-#           yield from self.game_input(message, message.content[1:])
-#       else:
-#           embed, title_text, title = image.get_embed_reply(message.content)
-#           if embed is not None:
-#               yield from self.client.send_message(message.channel, title, embed = embed)
-#               yield from self.client.send_message(message.channel, title_text)
 
     @asyncio.coroutine
     def tex(self, message, *ignore):

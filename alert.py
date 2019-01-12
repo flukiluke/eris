@@ -17,3 +17,7 @@ def task(client, config):
         if alert[1] > now:
             yield from asyncio.sleep((alert[1] - datetime.now()).total_seconds()) 
             yield from client.send_message(discord.Object(id = config['main_channel']), alert[0])
+
+def add(target, time, message):
+    pass
+
