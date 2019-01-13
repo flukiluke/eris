@@ -28,9 +28,10 @@ class Bot(object):
 
     @asyncio.coroutine
     def remind(self, message, *args):
-        if len(args) != 3:
+        if len(args) < 3:
             yield from self.client.send_message(message.channel, "remind <target> <time> <message>")
             return
+        target = args[0]
         if args[0] == 'all':
             target = '@everyone'
         elif args[0] == 'me':
