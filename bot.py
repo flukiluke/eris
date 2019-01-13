@@ -36,7 +36,7 @@ class Bot(object):
         elif args[0] == 'me':
             target = message.author.mention
         yield from alert.queue(target, args[1], args[2])
-        yield from self.client.send_message(message.channel, target + ' ' + args[2])
+        yield from self.client.send_message(discord.Object(id = self.config['main_channel']), target + ' ' + args[2])
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
