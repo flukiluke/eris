@@ -53,6 +53,10 @@ class Bot(object):
         yield from self.client.send_message(message.channel, basil.history())
 
     @asyncio.coroutine
+    def basil_water(self, message, runtime):
+        yield from self.client.send_message(message.channel, basil.water(runtime))
+
+    @asyncio.coroutine
     def tl(self, message, *ignore):
         yield from self.client.send_message(message.channel, translate.translate(message.content.split(' ', 1)[1]))
 
