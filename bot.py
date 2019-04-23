@@ -16,6 +16,7 @@ import quotes
 import translate
 import datetime
 import langcodes
+import basil
 
 class Bot(object):
     def __init__(self, client, config):
@@ -23,7 +24,7 @@ class Bot(object):
         self.config = config
         self.game_obj = None
         self.polls = {}
-        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl', 'tll', 'remind']
+        self.groups = ['metro', 'quote', 'lenny', 'poll', 'wa', 'waa', 'clear', 'tex', 'astro', 'tram', 'gather', 'tl', 'tll', 'remind', 'basil']
         wolf.startWA(config['WA_appid'])
 
     @asyncio.coroutine
@@ -38,6 +39,14 @@ class Bot(object):
             target = message.author.mention
         yield from alert.queue(target, args[1], args[2])
         yield from self.client.send_message(discord.Object(id = self.config['main_channel']), target + ' ' + args[2])
+
+    @asyncio.coroutine
+    def basil(self, message, command, *args):
+        yield from getattr(self, 'basil_' + command)(message, *args)
+
+    @asyncio.coroutine
+    def basil_moisture(self, message, *args):
+        yield from self.client.send_message(message.channel, basil.moisture())
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
