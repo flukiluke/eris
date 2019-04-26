@@ -54,7 +54,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def basil_water(self, message, runtime):
-        yield from self.client.send_message(message.channel, basil.water(runtime))
+        yield from self.client.send_message(message.channel, basil.water(int(runtime)))
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
