@@ -13,8 +13,12 @@ def history():
     return '```' + output.decode().strip() + '```'
 
 def water(runtime):
-    if runtime <= 0 or runtime > 60:
-        return 'Please only water between 0 and 60 seconds'
+    if runtime <= 0:
+        return "Nice try, you won't fool me with that one again."
+    if runtime > 60:
+        return 'Please only water me between 0 and 60 seconds.'
     output = basilcmd(['water', str(runtime)])
-    return 'Hydration: ' + output.decode().strip()
-
+    if output.decode().strip() == 'OK':
+        return str(runtime) + " seconds of S i p p"
+    else:
+        return "Hydration subsystem reported error: " + output.decode().strip()
