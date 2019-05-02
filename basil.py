@@ -1,4 +1,5 @@
 import subprocess
+import tempfile
 
 def basilcmd(cmds):
     output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
@@ -22,3 +23,13 @@ def water(runtime):
         return str(runtime) + " seconds of S i p p"
     else:
         return "Hydration subsystem reported error: " + output.decode().strip()
+
+def ghistory():
+    data = basilcmd(['raw_history'])
+    image = tempfile.NamedTemporaryFile(delete=False)
+    subprocess.run(['gnuplot', 'basil_history.gnuplot'], stdout=image, input=data)
+    image.close()
+    return image.name
+
+
+
