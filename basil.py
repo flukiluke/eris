@@ -24,8 +24,8 @@ def water(runtime):
     else:
         return "Hydration subsystem reported error: " + output.decode().strip()
 
-def ghistory():
-    data = basilcmd(['raw_history'])
+def ghistory(samples):
+    data = basilcmd(['raw_history', str(samples)])
     image = tempfile.NamedTemporaryFile(delete=False)
     subprocess.run(['gnuplot', 'basil_history.gnuplot'], stdout=image, input=data)
     image.close()
