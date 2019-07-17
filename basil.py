@@ -1,28 +1,10 @@
 import subprocess
 import time
+import csv
 
+lastWatered = time.time()
 
-class Cooldown():
-    def __init__(self, t):
-        # t has units of seconds
-        self.lastTime = 0
-        self.readyTime = time.time()
-        self.cooldown = t
-
-    def attempt(self, command, *args):
-        T = time.time()
-        if T > self.readyTime:
-            self.lastTime = self.readyTime
-            self.readyTime = T + self.cooldown
-            return command(*args)
-        else:
-            return None
-
-    def format(self):
-        return (int(lastTime/60), int((readyTime-time.time())/60))
-
-
-waterWally = Cooldown(10*60)
+COOLDOWN = 60
 
 def basilcmd(*cmds):
     output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', cmd], stderr=subprocess.STDOUT)
@@ -32,23 +14,25 @@ def moisture():
     output = basilcmd(['moisture'])
     return 'Soil moisture content: ' + output.decode().strip() + '%'
 
-def history():
-    output = basilcmd(['history'])
+def history(num=12):
+    output = basilcmd(['history', num])
     return '```' + output.decode().strip() + '```'
 
 def water(runtime):
+    dt = time.time() - lastWatered
     if runtime <= 0:
         return "Nice try, you won't fool me with that one again."
     if runtime > 60:
         return 'Please only water me between 0 and 60 seconds.'
-    output = waterWally.attempt(basilcmd, ['water', runtime])
-    if output is None:
-        return "I was watered %d minutes ago, but you may tend to me once more in a mere %d minutes." % waterWally.format()
+    if dt < COOLDOWN:
+        return 'I was watered %d seconds ago, please wait another %d seconds before attempting to water me again' % (int(dt), int(COOLDOWN - dt))
     else:
-        return output.decode().strip() + 'S i p p'
+        output = basilcmd(['water', runtime])
+    return output.decode().strip() + 'S i p p'
 
 def play(song):
     return 'Now Playing: Despacito ft. Daddy Yankee'
 
-def graph():
-    pass
+def graph(num=12):
+    output = basilcmd(['dump', num])
+    r = csv.reader(output.decode().split('\n'),delimiter=',')
