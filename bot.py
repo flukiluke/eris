@@ -66,10 +66,6 @@ class Bot(object):
         yield from self.client.send_message(message.channel, basil.play(song))
 
     @asyncio.coroutine
-    def basil_graph(delf, message, *args):
-        yield from self.client.send_message(message.channel, basil.graph())
-
-    @asyncio.coroutine
     def tl(self, message, *ignore):
         yield from self.client.send_message(message.channel, translate.translate(message.content.split(' ', 1)[1]))
 
