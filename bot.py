@@ -17,7 +17,6 @@ import translate
 import datetime
 import langcodes
 import basil
-import handle
 
 class Bot(object):
     def __init__(self, client, config):
@@ -59,14 +58,6 @@ class Bot(object):
     @asyncio.coroutine
     def basil_water(self, message, runtime):
         yield from self.client.send_message(message.channel, basil.water(int(runtime)))
-
-    @asyncio.coroutine
-    def basil_pay_respects(self, message, *args):
-        yield from self.client.send_message(message.channel, "F")
-
-    @asyncio.coroutine
-    def basil_play(self, message, song):
-        yield from self.client.send_message(message.channel, basil.play(song))
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
