@@ -1,5 +1,5 @@
 set terminal png size 600,400 enhanced
-set output 'tt.png'
+set output '/dev/stdout'
 set xdata time
 set timefmt '%Y-%m-%d %H:%M:%S'
 set format x "%d/%m\n%H:%M"
