@@ -13,17 +13,17 @@ def basilcmd(cmds):
     output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
     return output
 
-HELPTEXT['moisture'] = 'Check the instantaneous moisture of the pot'
+HELPTEXT['moisture'] = {'args': [], 'text':'Check the instantaneous moisture of the pot'}
 def moisture():
     output = basilcmd(['moisture'])
     return 'Soil moisture content: ' + output.decode().strip() + '%'
 
-HELPTEXT['history [N]'] = 'Print [N] of the automatic hourly moisture measurements.'
+HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
 def history(num=12):
     output = basilcmd(['history', num])
     return '```' + output.decode().strip() + '```'
 
-HELPTEXT['water [time]'] = 'Dispense water for [time] seconds'
+HELPTEXT['water'] = {'args': ['time'], 'text': 'Dispense water for [time] seconds'}
 def water(runtime):
     global last_watered, COOLDOWN, WATER_MAX_SECS
     dt = time.time() - last_watered
@@ -41,7 +41,7 @@ def water(runtime):
         else:
             return "Hydration subsystem reported error: " + output.decode().strip()
 
-HELPTEXT['graph [N]'] = 'Graph [N] of the automatic hourly moisture measurements.'
+HELPTEXT['graph'] = {'args': ['N'], 'text': 'Graph [N] of the automatic hourly moisture measurements.'}
 def graph(samples):
     data = basilcmd(['raw_history', str(samples)])
     image = tempfile.NamedTemporaryFile(delete=False)
@@ -50,13 +50,20 @@ def graph(samples):
     return image.name
 
 
-HELPTEXT['help [command]'] = 'Get detailed help for [command]'
+HELPTEXT['help'] = {'args': ['command'], 'text': 'Get detailed help for [command]'}
 def help(cmd):
     str = ''
-    try:
-        str += '!basil %s: %s\n' % (cmd, HELPTEXT[cmd])
-    except KeyError:
-        str += 'Basil commands:\n'
+
+    if cmd in HELPTEXT:
+        str += '!basil %s' % cmd
+        for a in HELPTEXT[cmd]['args']:
+            str += ' [%s]' % a
+        str += ': %s\n' % HELPTEXT[cmd]['text']
+    else:
+        str += 'Basil commands:\n\n'
         for text in HELPTEXT:
-            str += '!basil %s\n' % text
+            str += '!basil %s' % text
+            for a in HELPTEXT[text]['args']:
+                str += ' [%s]' % a
+            str += '\n'
     return str
