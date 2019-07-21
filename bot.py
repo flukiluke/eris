@@ -49,11 +49,11 @@ class Bot(object):
         yield from self.client.send_message(message.channel, basil.moisture())
 
     @asyncio.coroutine
-    def basil_history(self, message, samples=12):
+    def basil_history(self, message, samples=48):
         yield from self.client.send_message(message.channel, basil.history(samples))
 
     @asyncio.coroutine
-    def basil_graph(self, message, samples=12):
+    def basil_graph(self, message, samples=48):
         imagefile = basil.graph(samples)
         if imagefile is not None:
             yield from self.client.send_file(message.channel, imagefile, filename='graph.png')

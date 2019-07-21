@@ -18,11 +18,6 @@ def moisture():
     output = basilcmd(['moisture'])
     return 'Soil moisture content: ' + output.decode().strip() + '%'
 
-HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
-def history(num=12):
-    output = basilcmd(['history', num])
-    return '```' + output.decode().strip() + '```'
-
 HELPTEXT['water'] = {'args': ['time'], 'text': 'Dispense water for [time] seconds'}
 def water(runtime):
     global last_watered, COOLDOWN, WATER_MAX_SECS
@@ -49,6 +44,10 @@ def graph(samples):
     image.close()
     return image.name
 
+HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
+def history(samples):
+    output = basilcmd(['history', samples])
+    return '```' + output.decode().strip() + '```'
 
 HELPTEXT['help'] = {'args': ['command'], 'text': 'Get detailed help for [command]'}
 def help(cmd):
