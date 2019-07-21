@@ -23,8 +23,8 @@ def water(runtime):
     global last_watered, COOLDOWN, WATER_MAX_SECS
     dt = time.time() - last_watered
     if runtime <= 0:
-        return "Nice try, you won't fool me with that one again."
-    if runtime > WATER_MAX:
+        return ":thonk:"
+    if runtime > WATER_MAX_SECS:
         return "Please only water me between 0 and %d seconds." % WATER_MAX_SECS
     if dt < COOLDOWN:
         return "I was watered %d second(s) ago, but you may tend to me again in a mere %d second(s)" % (int(dt), int(COOLDOWN - dt))
