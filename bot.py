@@ -65,7 +65,7 @@ class Bot(object):
 
     @asyncio.coroutine
     def basil_help(self, message, cmd=None):
-        yield from self.client.send_message(message.channel, basil.help(cmd.strip()))
+        yield from self.client.send_message(message.channel, basil.help(str(cmd).strip()))
 
     @asyncio.coroutine
     def tl(self, message, *ignore):
