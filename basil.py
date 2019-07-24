@@ -10,8 +10,15 @@ WATER_MAX_SECS = 60
 HELPTEXT = {}
 
 def basilcmd(cmds):
-    output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
-    return output
+    try:
+        output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as err:
+        if err.returncode == 255:
+            return '**Critical Basil Error**: Failed to reach reading room pi by SSH.'
+        else:
+            return '**Critical Basil Error**: Unknown SSH error, code %d' % err.returncode
+    else:
+        return output
 
 HELPTEXT['moisture'] = {'args': [], 'text':'Check the instantaneous moisture of the pot'}
 def moisture():
@@ -23,7 +30,7 @@ def water(runtime):
     global last_watered, COOLDOWN, WATER_MAX_SECS
     dt = time.time() - last_watered
     if runtime <= 0:
-        return ":thonk:"
+        return "<:thonk:422588696701960203>"
     if runtime > WATER_MAX_SECS:
         return "Please only water me between 0 and %d seconds." % WATER_MAX_SECS
     if dt < COOLDOWN:
