@@ -1,5 +1,5 @@
 import subprocess
-
+import re
 import time
 import tempfile
 
@@ -10,8 +10,16 @@ WATER_MAX_SECS = 60
 HELPTEXT = {}
 
 def basilcmd(cmds):
-    output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
-    return output
+    try:
+        output = subprocess.check_output(['ssh', 'rrpi', './basilbot/cli.py', *cmds], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as err:
+        if err.returncode == 255:
+            return '**Critical Basil Error**: Failed to reach reading room pi by SSH.'
+        else:
+            return '**Critical Basil Error**: Unknown SSH error, code %d' % err.returncode
+    else:
+        return output
+
 
 HELPTEXT['moisture'] = {'args': [], 'text':'Check the instantaneous moisture of the pot'}
 def moisture():
@@ -23,7 +31,7 @@ def water(runtime):
     global last_watered, COOLDOWN, WATER_MAX_SECS
     dt = time.time() - last_watered
     if runtime <= 0:
-        return ":thonk:"
+        return "<:thonk:422588696701960203>"
     if runtime > WATER_MAX_SECS:
         return "Please only water me between 0 and %d seconds." % WATER_MAX_SECS
     if dt < COOLDOWN:
@@ -36,17 +44,32 @@ def water(runtime):
         else:
             return "Hydration subsystem reported error: " + output.decode().strip()
 
+# Supports: 3w, 7d, 1m,
+def parse_time_format(s):
+    clean=s.replace(' ','')
+    t=0
+    tmap={'h':1, 'd':24, 'w':24*7, 'm':24*30, 'y':24*365}
+
+    for spec in re.findall(clean,'[0-9]+([wdmy]|h?)'):
+        if spec[-1].isalpha():
+            t += tmap[spec[-1]]*int(spec[:-1])
+        else:
+            t += int(spec)
+    return t
+
+
+
 HELPTEXT['graph'] = {'args': ['N'], 'text': 'Graph [N] of the automatic hourly moisture measurements.'}
-def graph(samples):
-    data = basilcmd(['raw_history', str(samples)])
+def graph(fmt):
+    data = basilcmd(['raw_history', str(parse_time_format(fmt))])
     image = tempfile.NamedTemporaryFile(delete=False)
     subprocess.run(['gnuplot', 'basil_history.gnuplot'], stdout=image, input=data)
     image.close()
     return image.name
 
 HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
-def history(samples):
-    output = basilcmd(['history', samples])
+def history(fmt):
+    output = basilcmd(['history', str(parse_time_format(fmt))])
     return '```' + output.decode().strip() + '```'
 
 HELPTEXT['help'] = {'args': ['command'], 'text': 'Get detailed help for [command]'}
