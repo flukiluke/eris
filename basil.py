@@ -45,7 +45,7 @@ def water(runtime):
             return "Hydration subsystem reported error: " + output.decode().strip()
 
 # Supports: 3w, 7d, 1m,
-def parseTimeFormat(s):
+def parse_time_format(s):
     clean=s.replace(' ','')
     t=0
     tmap={'h':1, 'd':24, 'w':24*7, 'm':24*30, 'y':24*365}
@@ -61,7 +61,7 @@ def parseTimeFormat(s):
 
 HELPTEXT['graph'] = {'args': ['N'], 'text': 'Graph [N] of the automatic hourly moisture measurements.'}
 def graph(fmt):
-    data = basilcmd(['raw_history', str(parseTimeFormat(fmt))])
+    data = basilcmd(['raw_history', str(parse_time_format(fmt))])
     image = tempfile.NamedTemporaryFile(delete=False)
     subprocess.run(['gnuplot', 'basil_history.gnuplot'], stdout=image, input=data)
     image.close()
@@ -69,7 +69,7 @@ def graph(fmt):
 
 HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
 def history(fmt):
-    output = basilcmd(['history', str(parseTimeFormat(fmt))])
+    output = basilcmd(['history', str(parse_time_format(fmt))])
     return '```' + output.decode().strip() + '```'
 
 HELPTEXT['help'] = {'args': ['command'], 'text': 'Get detailed help for [command]'}
