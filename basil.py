@@ -1,5 +1,5 @@
 import subprocess
-
+import re
 import time
 import tempfile
 
@@ -19,6 +19,7 @@ def basilcmd(cmds):
             return '**Critical Basil Error**: Unknown SSH error, code %d' % err.returncode
     else:
         return output
+
 
 HELPTEXT['moisture'] = {'args': [], 'text':'Check the instantaneous moisture of the pot'}
 def moisture():
@@ -43,17 +44,32 @@ def water(runtime):
         else:
             return "Hydration subsystem reported error: " + output.decode().strip()
 
+# Supports: 3w, 7d, 1m,
+def parseTimeFormat(s):
+    clean=s.replace(' ','')
+    t=0
+    tmap={'h':1, 'd':24, 'w':24*7, 'm':24*30, 'y':24*365}
+
+    for spec in re.findall(clean,'[0-9]+([wdmy]|h?)'):
+        if spec[-1].isalpha():
+            t += tmap[spec[-1]]*int(spec[:-1])
+        else:
+            t += int(spec)
+    return t
+
+
+
 HELPTEXT['graph'] = {'args': ['N'], 'text': 'Graph [N] of the automatic hourly moisture measurements.'}
-def graph(samples):
-    data = basilcmd(['raw_history', str(samples)])
+def graph(fmt):
+    data = basilcmd(['raw_history', str(parseTimeFormat(fmt))])
     image = tempfile.NamedTemporaryFile(delete=False)
     subprocess.run(['gnuplot', 'basil_history.gnuplot'], stdout=image, input=data)
     image.close()
     return image.name
 
 HELPTEXT['history'] = {'args': ['N'], 'text': 'Print [N] of the automatic hourly moisture measurements.'}
-def history(samples):
-    output = basilcmd(['history', samples])
+def history(fmt):
+    output = basilcmd(['history', str(parseTimeFormat(fmt))])
     return '```' + output.decode().strip() + '```'
 
 HELPTEXT['help'] = {'args': ['command'], 'text': 'Get detailed help for [command]'}
