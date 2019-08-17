@@ -50,7 +50,7 @@ def parse_time_format(s):
     t=0
     tmap={'h':1, 'd':24, 'w':24*7, 'm':24*30, 'y':24*365}
 
-    for spec in re.findall(clean,'[0-9]+([wdmy]|h?)'):
+    for spec in re.findall(r"[0-9]+[wdmyh]", clean):
         if spec[-1].isalpha():
             t += tmap[spec[-1]]*int(spec[:-1])
         else:
